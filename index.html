@@ -1,0 +1,679 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JobHunt — Remote Jobs</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #0a0a0f;
+        --surface: #13131a;
+        --card: #1a1a24;
+        --border: #2a2a3a;
+        --accent: #6c63ff;
+        --accent2: #ff6584;
+        --green: #00d97e;
+        --text: #f0f0ff;
+        --muted: #8888aa;
+        --radius: 16px;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+      }
+
+      header {
+        background: linear-gradient(
+          135deg,
+          #0d0d1a 0%,
+          #1a0a2e 50%,
+          #0a1628 100%
+        );
+        padding: 60px 20px 50px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        border-bottom: 1px solid var(--border);
+      }
+
+      header::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background:
+          radial-gradient(
+            ellipse at 60% 40%,
+            rgba(108, 99, 255, 0.15) 0%,
+            transparent 60%
+          ),
+          radial-gradient(
+            ellipse at 30% 70%,
+            rgba(255, 101, 132, 0.1) 0%,
+            transparent 50%
+          );
+        pointer-events: none;
+      }
+
+      .header-tag {
+        display: inline-block;
+        background: rgba(108, 99, 255, 0.15);
+        border: 1px solid rgba(108, 99, 255, 0.4);
+        color: #a89fff;
+        font-size: 0.75rem;
+        font-family: "Syne", sans-serif;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        padding: 6px 16px;
+        border-radius: 100px;
+        margin-bottom: 20px;
+      }
+
+      header h1 {
+        font-family: "Syne", sans-serif;
+        font-size: clamp(2rem, 6vw, 4rem);
+        font-weight: 800;
+        line-height: 1.1;
+        margin-bottom: 12px;
+        background: linear-gradient(135deg, #ffffff 0%, #a89fff 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      header p {
+        color: var(--muted);
+        font-size: clamp(0.9rem, 2vw, 1.1rem);
+        margin-bottom: 35px;
+        font-weight: 300;
+      }
+
+      .search-wrapper {
+        position: relative;
+        max-width: 580px;
+        margin: 0 auto;
+      }
+      .search-icon {
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--muted);
+      }
+
+      #search {
+        width: 100%;
+        padding: 16px 20px 16px 50px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 100px;
+        color: var(--text);
+        font-size: 1rem;
+        font-family: "DM Sans", sans-serif;
+        outline: none;
+        transition: all 0.3s ease;
+      }
+
+      #search::placeholder {
+        color: var(--muted);
+      }
+      #search:focus {
+        border-color: var(--accent);
+        background: rgba(108, 99, 255, 0.08);
+        box-shadow: 0 0 0 4px rgba(108, 99, 255, 0.15);
+      }
+
+      .stats-bar {
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        padding: 16px 20px;
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        flex-wrap: wrap;
+      }
+
+      .stat {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+      .stat strong {
+        color: var(--text);
+        font-family: "Syne", sans-serif;
+        font-size: 1rem;
+      }
+      .stat-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--green);
+        box-shadow: 0 0 8px var(--green);
+        animation: pulse 2s infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.6;
+          transform: scale(0.8);
+        }
+      }
+
+      .filter-section {
+        max-width: 960px;
+        margin: 24px auto 0;
+        padding: 0 20px;
+      }
+      .filter-label {
+        font-size: 0.75rem;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 10px;
+        font-family: "Syne", sans-serif;
+      }
+      .filter-row {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 16px;
+      }
+
+      .filter-btn {
+        padding: 7px 16px;
+        border-radius: 100px;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        color: var(--muted);
+        font-size: 0.82rem;
+        font-family: "DM Sans", sans-serif;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .filter-btn:hover {
+        border-color: var(--accent);
+        color: var(--text);
+      }
+      .filter-btn.active {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: white;
+      }
+
+      .source-remotive {
+        background: rgba(108, 99, 255, 0.12);
+        color: #a89fff;
+        border: 1px solid rgba(108, 99, 255, 0.25);
+      }
+      .source-muse {
+        background: rgba(255, 101, 132, 0.12);
+        color: #ff8fa3;
+        border: 1px solid rgba(255, 101, 132, 0.25);
+      }
+      .source-arbeitnow {
+        background: rgba(0, 217, 126, 0.12);
+        color: var(--green);
+        border: 1px solid rgba(0, 217, 126, 0.25);
+      }
+      .source-himalayas {
+        background: rgba(255, 179, 71, 0.12);
+        color: #ffb347;
+        border: 1px solid rgba(255, 179, 71, 0.25);
+      }
+
+      #jobs-container {
+        max-width: 960px;
+        margin: 16px auto 60px;
+        padding: 0 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .job-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 20px 24px;
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 16px;
+        align-items: center;
+        transition: all 0.25s ease;
+        text-decoration: none;
+        color: inherit;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .job-card::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: var(--accent);
+        opacity: 0;
+        transition: opacity 0.25s ease;
+      }
+      .job-card:hover {
+        border-color: rgba(108, 99, 255, 0.4);
+        background: #1e1e2e;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+      }
+      .job-card:hover::before {
+        opacity: 1;
+      }
+
+      .company-logo {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Syne", sans-serif;
+        font-weight: 800;
+        font-size: 1.1rem;
+        color: white;
+        flex-shrink: 0;
+        overflow: hidden;
+      }
+      .company-logo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 12px;
+      }
+
+      .job-info h2 {
+        font-family: "Syne", sans-serif;
+        font-size: clamp(0.9rem, 2vw, 1.05rem);
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 3px;
+      }
+      .job-info .company {
+        color: var(--muted);
+        font-size: 0.88rem;
+        margin-bottom: 10px;
+      }
+      .badges {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      .badge {
+        padding: 3px 10px;
+        border-radius: 100px;
+        font-size: 0.76rem;
+        font-weight: 500;
+      }
+      .badge-category {
+        background: rgba(108, 99, 255, 0.12);
+        color: #a89fff;
+        border: 1px solid rgba(108, 99, 255, 0.25);
+      }
+      .badge-salary {
+        background: rgba(0, 217, 126, 0.1);
+        color: var(--green);
+        border: 1px solid rgba(0, 217, 126, 0.25);
+      }
+      .badge-location {
+        background: rgba(255, 179, 71, 0.1);
+        color: #ffb347;
+        border: 1px solid rgba(255, 179, 71, 0.25);
+      }
+
+      .apply-btn {
+        background: var(--accent);
+        color: white;
+        padding: 11px 22px;
+        border-radius: 100px;
+        text-decoration: none;
+        font-size: 0.88rem;
+        font-weight: 500;
+        white-space: nowrap;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+      }
+      .apply-btn:hover {
+        background: #8b85ff;
+        transform: scale(1.04);
+        box-shadow: 0 4px 20px rgba(108, 99, 255, 0.4);
+      }
+
+      #load-more {
+        display: block;
+        margin: 10px auto 20px;
+        padding: 14px 40px;
+        background: transparent;
+        border: 1px solid var(--accent);
+        color: var(--accent);
+        border-radius: 100px;
+        font-size: 0.95rem;
+        font-family: "DM Sans", sans-serif;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      #load-more:hover {
+        background: var(--accent);
+        color: white;
+      }
+
+      #loading {
+        text-align: center;
+        padding: 80px 20px;
+        color: var(--muted);
+      }
+      .spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid var(--border);
+        border-top-color: var(--accent);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        margin: 0 auto 16px;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .results-count {
+        font-size: 0.85rem;
+        color: var(--muted);
+        padding: 0 4px;
+        margin-bottom: 4px;
+      }
+
+      @media (max-width: 768px) {
+        header {
+          padding: 40px 16px 35px;
+        }
+        .job-card {
+          grid-template-columns: auto 1fr;
+          grid-template-rows: auto auto;
+        }
+        .apply-btn {
+          grid-column: 1 / -1;
+          text-align: center;
+        }
+        .stats-bar {
+          gap: 16px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .job-card {
+          padding: 14px 16px;
+        }
+        .company-logo {
+          width: 42px;
+          height: 42px;
+          font-size: 1rem;
+        }
+        #search {
+          font-size: 0.9rem;
+        }
+        .badge {
+          font-size: 0.7rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="header-tag">✦ 4 Live Sources</div>
+      <h1>Find Your Dream<br />Remote Job</h1>
+      <p>Real jobs from Remotive, The Muse, Arbeitnow & Himalayas</p>
+      <div class="search-wrapper">
+        <span class="search-icon">🔍</span>
+        <input
+          type="text"
+          id="search"
+          placeholder="Search jobs, companies, skills..."
+        />
+      </div>
+    </header>
+
+    <div class="stats-bar">
+      <div class="stat">
+        <div class="stat-dot"></div>
+        <span><strong id="job-count">—</strong> live jobs</span>
+      </div>
+      <div class="stat">🌍 <span>100% Remote</span></div>
+      <div class="stat">⚡ <span>4 sources</span></div>
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-label">Filter by source</div>
+      <div class="filter-row" id="source-filters">
+        <button class="filter-btn active" onclick="filterSource('all', this)">
+          All Sources
+        </button>
+        <button class="filter-btn" onclick="filterSource('Remotive', this)">
+          🟣 Remotive
+        </button>
+        <button class="filter-btn" onclick="filterSource('The Muse', this)">
+          🩷 The Muse
+        </button>
+        <button class="filter-btn" onclick="filterSource('Arbeitnow', this)">
+          🟢 Arbeitnow
+        </button>
+        <button class="filter-btn" onclick="filterSource('Himalayas', this)">
+          🟠 Himalayas
+        </button>
+      </div>
+      <div class="filter-label">Filter by category</div>
+      <div class="filter-row" id="category-filters">
+        <button class="filter-btn active" onclick="filterCategory('all', this)">
+          All Categories
+        </button>
+      </div>
+    </div>
+
+    <div id="jobs-container">
+      <div id="loading">
+        <div class="spinner"></div>
+        <p>Loading jobs from 4 sources...</p>
+      </div>
+    </div>
+
+    <script>
+      let allJobs = [];
+      let filteredJobs = [];
+      let activeSource = "all";
+      let activeCategory = "all";
+      let searchQuery = "";
+      let visibleCount = 30;
+      const PAGE_SIZE = 30;
+
+      async function fetchJobs() {
+        try {
+          const response = await fetch("https://job-board-z7di.onrender.com/api/jobs");
+          allJobs = await response.json();
+          document.getElementById("job-count").textContent = allJobs.length;
+          buildCategoryFilters(allJobs);
+          filteredJobs = allJobs;
+          renderJobs();
+        } catch (error) {
+          document.getElementById("loading").innerHTML =
+            `<p style="color:#ff6584">⚠️ Could not load jobs. Make sure your server is running!</p>`;
+        }
+      }
+
+      function buildCategoryFilters(jobs) {
+        const categories = [...new Set(jobs.map((j) => j.category))].slice(
+          0,
+          8,
+        );
+        const el = document.getElementById("category-filters");
+        categories.forEach((cat) => {
+          const btn = document.createElement("button");
+          btn.className = "filter-btn";
+          btn.textContent = cat;
+          btn.onclick = () => filterCategory(cat, btn);
+          el.appendChild(btn);
+        });
+      }
+
+      // ✅ BUG 1 FIXED — search + filter work together
+      function applyAllFilters() {
+        filteredJobs = allJobs;
+
+        // Apply source filter
+        if (activeSource !== "all") {
+          filteredJobs = filteredJobs.filter((j) => j.source === activeSource);
+        }
+
+        // Apply category filter
+        if (activeCategory !== "all") {
+          filteredJobs = filteredJobs.filter(
+            (j) => j.category === activeCategory,
+          );
+        }
+
+        // Apply search ON TOP of filters
+        if (searchQuery !== "") {
+          filteredJobs = filteredJobs.filter(
+            (job) =>
+              job.title.toLowerCase().includes(searchQuery) ||
+              job.company_name.toLowerCase().includes(searchQuery) ||
+              job.category.toLowerCase().includes(searchQuery) ||
+              (job.location &&
+                job.location.toLowerCase().includes(searchQuery)),
+          );
+        }
+
+        visibleCount = PAGE_SIZE;
+        renderJobs();
+      }
+
+      function filterSource(source, btn) {
+        document
+          .querySelectorAll("#source-filters .filter-btn")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        activeSource = source;
+        applyAllFilters();
+      }
+
+      function filterCategory(cat, btn) {
+        document
+          .querySelectorAll("#category-filters .filter-btn")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        activeCategory = cat;
+        applyAllFilters();
+      }
+
+      document.getElementById("search").addEventListener("input", function () {
+        searchQuery = this.value.toLowerCase().trim();
+        applyAllFilters();
+      });
+
+      function getInitials(name) {
+        return name
+          .split(" ")
+          .map((w) => w[0])
+          .join("")
+          .substring(0, 2)
+          .toUpperCase();
+      }
+
+      function getSourceBadgeClass(source) {
+        if (source === "Remotive") return "source-remotive";
+        if (source === "The Muse") return "source-muse";
+        if (source === "Himalayas") return "source-himalayas";
+        return "source-arbeitnow";
+      }
+
+      function renderJobs() {
+        const container = document.getElementById("jobs-container");
+        container.innerHTML = `<p class="results-count">${filteredJobs.length} job${filteredJobs.length !== 1 ? "s" : ""} found</p>`;
+
+        if (filteredJobs.length === 0) {
+          container.innerHTML +=
+            '<p style="text-align:center;color:var(--muted);padding:40px">No jobs found. Try a different search!</p>';
+          return;
+        }
+
+        const logoColors = [
+          "#6c63ff,#ff6584",
+          "#00d97e,#6c63ff",
+          "#ff6584,#ffb347",
+          "#00b4d8,#6c63ff",
+          "#ffb347,#ff6584",
+        ];
+        const jobsToShow = filteredJobs.slice(0, visibleCount);
+
+        jobsToShow.forEach((job) => {
+          const card = document.createElement("a");
+          card.className = "job-card";
+          card.href = job.url;
+          card.target = "_blank";
+          const colorIndex = job.company_name.length % logoColors.length;
+
+          card.innerHTML = `
+          <div class="company-logo" style="background:linear-gradient(135deg,${logoColors[colorIndex]})">
+            ${
+              job.company_logo
+                ? `<img src="${job.company_logo}" alt="${job.company_name}" onerror="this.parentElement.textContent='${getInitials(job.company_name)}'">`
+                : getInitials(job.company_name)
+            }
+          </div>
+          <div class="job-info">
+            <h2>${job.title}</h2>
+            <p class="company">${job.company_name}</p>
+            <div class="badges">
+              <span class="badge ${getSourceBadgeClass(job.source)}">⚡ ${job.source}</span>
+              <span class="badge badge-category">📁 ${job.category}</span>
+              ${job.salary ? `<span class="badge badge-salary">💰 ${job.salary}</span>` : ""}
+              <span class="badge badge-location">📍 ${job.location}</span>
+            </div>
+          </div>
+          <span class="apply-btn">Apply Now →</span>
+        `;
+          container.appendChild(card);
+        });
+
+        if (visibleCount < filteredJobs.length) {
+          const loadMore = document.createElement("button");
+          loadMore.id = "load-more";
+          loadMore.textContent = `Load More (${filteredJobs.length - visibleCount} remaining)`;
+          loadMore.onclick = () => {
+            visibleCount += PAGE_SIZE;
+            renderJobs();
+          };
+          container.appendChild(loadMore);
+        }
+      }
+
+      fetchJobs();
+    </script>
+  </body>
+</html>
